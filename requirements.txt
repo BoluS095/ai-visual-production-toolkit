@@ -1,0 +1,21 @@
+# AI Visual Production Toolkit
+# Core
+Pillow>=10.0
+opencv-python>=4.8
+requests>=2.31
+httpx>=0.25
+
+# AI/ML
+torch>=2.1
+diffusers>=0.25
+transformers>=4.36
+openai>=1.6
+
+# API
+fastapi>=0.108
+uvicorn>=0.25
+
+# Utils
+python-dotenv>=1.0
+rich>=13.7
+pydantic>=2.5
