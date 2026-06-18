@@ -1,0 +1,39 @@
+{
+  "client": "Example Brand",
+  "project": "Social Media Kit \u2014 June 2026",
+  "deliverables": [
+    {
+      "type": "social_post",
+      "platform": "instagram",
+      "dimensions": "1080x1080",
+      "quantity": 10,
+      "style": "minimalist, modern, brand-aligned",
+      "color_palette": [
+        "#1a1a2e",
+        "#16213e",
+        "#0f3460",
+        "#e94560"
+      ],
+      "description": "Product showcase posts with clean backgrounds"
+    },
+    {
+      "type": "story",
+      "platform": "instagram",
+      "dimensions": "1080x1920",
+      "quantity": 5,
+      "style": "dynamic, bold typography",
+      "description": "Promotional stories for summer sale"
+    }
+  ],
+  "brand_assets": {
+    "logo_url": "https://example.com/logo.png",
+    "fonts": [
+      "Inter",
+      "Playfair Display"
+    ],
+    "voice": "professional, confident, innovative"
+  },
+  "deadline": "2026-06-30",
+  "format": "png",
+  "quality": "high"
+}
