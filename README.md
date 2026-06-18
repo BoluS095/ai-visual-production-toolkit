@@ -1,10 +1,25 @@
 # 🎨 AI Visual Production Toolkit
 
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 > End-to-end pipeline for generating, post-processing, and delivering AI visual assets at scale.
 
 ## Overview
 
-This toolkit automates the full visual production pipeline:
+This toolkit automates the full visual production pipeline — from creative brief to delivered assets — using multiple generative AI models. Built for agencies, studios, and creative teams who need to produce high-quality visual content at scale.
+
+### Pipeline
+
+```
+client_brief.json
+    │
+    ▼
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐     ┌──────┐     ┌──────────┐
+│ Brief Parser │────▶│ Batch Engine │────▶│ Post-Process │────▶│  QC  │────▶│ Delivery │
+└─────────────┘     └──────────────┘     └─────────────┘     └──────┘     └──────────┘
+```
 
 1. **Brief Intake** — Parse client briefs into structured generation parameters
 2. **Batch Generation** — Generate visual assets across multiple AI models (Stable Diffusion, DALL-E, Midjourney via API)
@@ -12,23 +27,20 @@ This toolkit automates the full visual production pipeline:
 4. **Quality Control** — Automated QC scoring + human review queue
 5. **Delivery** — Package and deliver assets in client-specified formats
 
-## Architecture
+## Quick Start
 
-```
-client_brief.json
-    │
-    ▼
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│ Brief Parser │────▶│ Batch Engine │────▶│ Post-Process │
-└─────────────┘     └──────────────┘     └─────────────┘
-                                                │
-                          ┌─────────────┐       │
-                          │   QC Score   │◀──────┘
-                          └─────────────┘
-                                │
-                          ┌─────────────┐
-                          │   Delivery   │
-                          └─────────────┘
+```bash
+# Clone and install
+git clone https://github.com/BoluS095/ai-visual-production-toolkit.git
+cd ai-visual-production-toolkit
+pip install -r requirements.txt
+
+# Copy environment config
+cp .env.example .env
+# Edit .env with your API keys
+
+# Run with sample brief
+python -m src.intake.parser examples/sample_brief.json
 ```
 
 ## Project Structure
@@ -36,57 +48,50 @@ client_brief.json
 ```
 ai-visual-production-toolkit/
 ├── src/
-│   ├── intake/          # Brief parsing & parameter extraction
-│   ├── generation/      # Multi-model generation engine
-│   ├── postprocess/     # Upscaling, color, overlays, formatting
+│   ├── intake/          # Brief parsing and parameter extraction
+│   ├── generation/      # Multi-model batch generation engine
+│   ├── postprocess/     # Upscaling, color correction, overlays
 │   ├── qc/              # Quality control scoring
-│   └── delivery/        # Packaging & delivery automation
-├── prompts/             # Tested prompt templates by category
-├── configs/             # Model configs, brand presets
-├── tests/
-├── requirements.txt
-└── README.md
+│   └── delivery/        # Asset packaging and delivery
+├── configs/             # Pipeline configuration
+├── examples/            # Sample briefs and workflows
+└── requirements.txt
 ```
 
-## Getting Started
+## Supported Models
 
-```bash
-# Clone the repo
-git clone https://github.com/BoluS095/ai-visual-production-toolkit.git
-cd ai-visual-production-toolkit
+| Model | Status | Use Case |
+|-------|--------|----------|
+| Stable Diffusion XL | ✅ Ready | Product shots, backgrounds, abstract art |
+| DALL-E 3 | ✅ Ready | Marketing graphics, social media content |
+| Midjourney (via API) | 🔧 Beta | High-end creative, editorial imagery |
+| Flux | 🔧 Beta | Photorealistic generation |
 
-# Install dependencies
-pip install -r requirements.txt
+## Configuration
 
-# Configure your API keys
-cp .env.example .env
-# Edit .env with your model API keys
+See `configs/default.yaml` for pipeline configuration options:
 
-# Run a test generation
-python -m src.generation.generate --brief examples/sample_brief.json
+```yaml
+generation:
+  default_model: "sdxl"
+  batch_size: 10
+  quality_threshold: 0.75
+
+postprocess:
+  upscale: true
+  upscale_factor: 2
+  color_correction: true
+  format: "png"
 ```
 
-## Roadmap
+## Contributing
 
-- [x] Project structure & architecture design
-- [x] Brief parser with template support
-- [ ] Stable Diffusion XL integration
-- [ ] DALL-E 3 API integration
-- [ ] Automated upscaling pipeline (Real-ESRGAN)
-- [ ] Brand overlay system
-- [ ] QC scoring model
-- [ ] Delivery automation (Google Drive, Dropbox, direct)
-- [ ] Web dashboard for client review
-
-## Tech Stack
-
-- **Python 3.11+** — Core pipeline
-- **Stable Diffusion / ComfyUI** — Primary generation engine
-- **OpenAI API** — DALL-E integration
-- **Pillow / OpenCV** — Post-processing
-- **FastAPI** — API layer
-- **SQLite** — Job tracking
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-MIT
+MIT License — see [LICENSE](LICENSE) for details.
+
+## Author
+
+**Rafał Korzeniewski** — Python developer, trainer, and [PyWaw](https://pywaw.org) co-organizer.
