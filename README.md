@@ -1,97 +1,106 @@
-# 🎨 AI Visual Production Toolkit
+# AI Visual Production Toolkit
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Tests](https://github.com/BoluS095/ai-visual-production-toolkit/actions/workflows/tests.yml/badge.svg)](https://github.com/BoluS095/ai-visual-production-toolkit/actions/workflows/tests.yml)
 
-> End-to-end pipeline for generating, post-processing, and delivering AI visual assets at scale.
+A Python project for turning creative briefs into structured visual-production jobs. **The repository is an early-stage prototype, not yet a complete image-generation or delivery platform.** The README distinguishes working code from planned pipeline components.
 
-## Overview
+## Current status
 
-This toolkit automates the full visual production pipeline — from creative brief to delivered assets — using multiple generative AI models. Built for agencies, studios, and creative teams who need to produce high-quality visual content at scale.
+### Implemented
+- Load UTF-8 JSON client briefs.
+- Validate required fields, deliverable structure, positive quantities, WIDTHxHEIGHT dimensions, and color-palette types.
+- Normalize deliverables into generation parameters.
+- Produce quality warnings for missing descriptions, missing brand assets, empty deliverable lists, and oversized batches.
+- Run a standard-library unit-test suite on Python 3.10, 3.11, and 3.12 through GitHub Actions.
 
-### Pipeline
+### Planned (not implemented yet)
+- Image-generation adapters (for example, Stable Diffusion or hosted model APIs).
+- Batch orchestration, retries, and resumable jobs.
+- Image post-processing and quality-control scoring.
+- Packaging and delivery workflows.
 
-```
-client_brief.json
-    │
-    ▼
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐     ┌──────┐     ┌──────────┐
-│ Brief Parser │────▶│ Batch Engine │────▶│ Post-Process │────▶│  QC  │────▶│ Delivery │
-└─────────────┘     └──────────────┘     └─────────────┘     └──────┘     └──────────┘
-```
+The generation/, postprocess/, qc/, and delivery/ packages are extension points at this stage. Model integrations and production-readiness are not claimed.
 
-1. **Brief Intake** — Parse client briefs into structured generation parameters
-2. **Batch Generation** — Generate visual assets across multiple AI models (Stable Diffusion, DALL-E, Midjourney via API)
-3. **Post-Processing** — Automated upscaling, color correction, format conversion, and brand overlay
-4. **Quality Control** — Automated QC scoring + human review queue
-5. **Delivery** — Package and deliver assets in client-specified formats
+## Quick start
 
-## Quick Start
+Python 3.10 or newer is required. The brief parser uses only the Python standard library.
 
 ```bash
-# Clone and install
 git clone https://github.com/BoluS095/ai-visual-production-toolkit.git
 cd ai-visual-production-toolkit
-pip install -r requirements.txt
 
-# Copy environment config
-cp .env.example .env
-# Edit .env with your API keys
+# Parse and validate the included example
+python -m src.intake.parser examples/sample_brief.json
 
-# Run with sample brief
+# Run the test suite
+python -m unittest discover -s tests -v
+```
+
+## Brief format
+
+A brief is a UTF-8 JSON object with non-empty client and project strings and a deliverables array. Each deliverable is an object. quantity must be a positive integer; dimensions must be positive WIDTHxHEIGHT; and color_palette must be an array of strings.
+
+Example:
+
+```json
+{
+  "client": "Example Brand",
+  "project": "Spring campaign",
+  "brand_assets": {
+    "logo_url": "https://example.com/logo.png"
+  },
+  "deliverables": [
+    {
+      "type": "social_post",
+      "platform": "instagram",
+      "dimensions": "1080x1080",
+      "quantity": 4,
+      "description": "Product launch posts",
+      "color_palette": ["#1A1A2E", "#E94560"]
+    }
+  ]
+}
+```
+
+Run the parser with:
+
+```bash
 python -m src.intake.parser examples/sample_brief.json
 ```
 
-## Project Structure
+## Project layout
 
 ```
-ai-visual-production-toolkit/
-├── src/
-│   ├── intake/          # Brief parsing and parameter extraction
-│   ├── generation/      # Multi-model batch generation engine
-│   ├── postprocess/     # Upscaling, color correction, overlays
-│   ├── qc/              # Quality control scoring
-│   └── delivery/        # Asset packaging and delivery
-├── configs/             # Pipeline configuration
-├── examples/            # Sample briefs and workflows
-└── requirements.txt
+src/
+  intake/
+    parser.py        # Implemented brief loading, validation, and normalization
+  generation/        # Planned model adapters and batch execution
+  postprocess/       # Planned image processing
+  qc/                # Planned quality checks
+  delivery/          # Planned packaging and delivery
+configs/
+  default.yaml       # Initial target configuration (not all settings are wired yet)
+examples/
+  sample_brief.json
+tests/
+  test_parser.py
+.github/
+  workflows/
+    tests.yml
 ```
 
-## Supported Models
+## Configuration and dependencies
 
-| Model | Status | Use Case |
-|-------|--------|----------|
-| Stable Diffusion XL | ✅ Ready | Product shots, backgrounds, abstract art |
-| DALL-E 3 | ✅ Ready | Marketing graphics, social media content |
-| Midjourney (via API) | 🔧 Beta | High-end creative, editorial imagery |
-| Flux | 🔧 Beta | Photorealistic generation |
+configs/default.yaml records intended pipeline defaults; the settings are not all consumed by executable pipeline components yet. requirements.txt lists dependencies anticipated for later image/model integrations. They are not needed to run the current brief parser or its tests.
 
-## Configuration
-
-See `configs/default.yaml` for pipeline configuration options:
-
-```yaml
-generation:
-  default_model: "sdxl"
-  batch_size: 10
-  quality_threshold: 0.75
-
-postprocess:
-  upscale: true
-  upscale_factor: 2
-  color_correction: true
-  format: "png"
-```
+Do not put API keys in committed files. Use local environment variables for credentials when model adapters are added.
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Issues and pull requests are welcome. Please include focused tests for parser or pipeline changes and clearly label unfinished or provider-specific functionality.
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
-
-## Author
-
-**Rafał Korzeniewski** — Python developer, trainer, and [PyWaw](https://pywaw.org) co-organizer.
+MIT. See LICENSE.
