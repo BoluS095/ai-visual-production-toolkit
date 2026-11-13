@@ -20,7 +20,7 @@ def _positive_integer(value: Any, field_name: str) -> int:
 
 def _validate_dimensions(value: Any, field_name: str) -> str:
     if not isinstance(value, str):
-        raise ValueError(f"{field_name} must be a string such as '1024x1024'")
+        raise ValueError(f"{field_name} must be a string using positive WIDTHxHEIGHT dimensions")
     match = _DIMENSIONS_RE.fullmatch(value)
     if not match or int(match.group(1)) <= 0 or int(match.group(2)) <= 0:
         raise ValueError(f"{field_name} must use positive WIDTHxHEIGHT dimensions")
